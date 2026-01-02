@@ -12,3 +12,4 @@ const db = mysql.createPool({
 console.log("DB HOST:", process.env.MYSQL_ADDON_HOST);
 
 module.exports = db;
+orts = db;
