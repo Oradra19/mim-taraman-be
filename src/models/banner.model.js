@@ -24,3 +24,4 @@ exports.create = (image, description) => {
 exports.remove = (id) => {
   return db.promise().query("DELETE FROM banners WHERE id = ?", [id]);
 };
+ 
