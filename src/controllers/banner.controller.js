@@ -17,6 +17,7 @@ exports.createBanner = async (req, res) => {
     const { description } = req.body;
     const imageUrl = req.file.path;
     const publicId = req.file.filename;
+    
 
     try {
       await Banner.create(imageUrl, description, publicId);
@@ -25,6 +26,9 @@ exports.createBanner = async (req, res) => {
       try { await cloudinary.uploader.destroy(publicId); } catch (_) {}
       return res.status(500).json({ message: dbErr.message });
     }
+
+    console.log(req.file); // debug
+    res.json(req.file); //debug
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
