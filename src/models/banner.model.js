@@ -16,8 +16,8 @@ exports.create = (image, description, publicId) => {
   return db
     .promise()
     .query(
-      "INSERT INTO banners (image, description, public_id, type) VALUES (?, ?, ?, 'banner')",
-      [image, description, publicId]
+      "INSERT INTO banners (image, public_id, description, type) VALUES (?, ?, ?, 'banner')",
+      [image, publicId, description]
     );
 };
 
