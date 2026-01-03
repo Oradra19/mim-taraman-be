@@ -12,19 +12,14 @@ exports.getBanner = async (req, res) => {
 
 exports.createBanner = async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ message: "File wajib diupload" });
+    const { imageUrl, publicId, description } = req.body;
 
-    const { description } = req.body;
-    const imageUrl = req.file.path;
-    const publicId = req.file.filename;
-
-    try {
-      await Banner.create(imageUrl, description, publicId);
-      res.status(201).json({ message: "Banner berhasil ditambahkan", imageUrl });
-    } catch (dbErr) {
-      try { await cloudinary.uploader.destroy(publicId); } catch (_) {}
-      res.status(500).json({ message: dbErr.message });
+    if (!imageUrl || !publicId) {
+      return res.status(400).json({ message: "imageUrl & publicId wajib" });
     }
+
+    await Banner.create(imageUrl, description, publicId);
+    res.status(201).json({ message: "Banner berhasil ditambahkan", imageUrl });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
@@ -36,9 +31,10 @@ exports.deleteBanner = async (req, res) => {
     const banner = rows.find(b => b.id == req.params.id);
     if (!banner) return res.status(404).json({ message: "Banner tidak ditemukan" });
 
+    // hapus dari Cloudinary pakai public_id
     try { await cloudinary.uploader.destroy(banner.public_id); } catch (_) {}
-    await Banner.remove(req.params.id);
 
+    await Banner.remove(req.params.id);
     res.json({ message: "Banner berhasil dihapus" });
   } catch (err) {
     res.status(500).json({ message: err.message });
