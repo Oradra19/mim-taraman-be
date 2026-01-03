@@ -1,7 +1,10 @@
 require("dotenv").config();
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
+// import default sesuai CommonJS
+const CloudinaryStorageModule = require("multer-storage-cloudinary");
+const CloudinaryStorage = CloudinaryStorageModule.CloudinaryStorage || CloudinaryStorageModule.default || CloudinaryStorageModule;
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -12,7 +15,6 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
   cloudinary,
   params: (req, file) => {
-    // otomatis pilih folder berdasarkan tipe file
     if (file.mimetype.startsWith("video/")) {
       return {
         folder: "video",
@@ -26,14 +28,14 @@ const storage = new CloudinaryStorage({
         public_id: `image-${Date.now()}`,
       };
     } else {
-      throw new Error("Hanya file gambar atau video yang diperbolehkan");
+      throw new Error("Hanya gambar atau video yang diperbolehkan");
     }
   },
 });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 20 * 1024 * 1024 }, // max 20MB
+  limits: { fileSize: 20 * 1024 * 1024 },
   fileFilter: (req, file, cb) => {
     if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
       cb(null, true);

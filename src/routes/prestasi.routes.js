@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middlewares/upload")("prestasi");
+const upload = require("../middlewares/upload");
 const auth = require("../middlewares/auth.middleware");
 const controller = require("../controllers/prestasi.controller");
 
