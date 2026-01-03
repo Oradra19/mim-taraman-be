@@ -12,10 +12,7 @@ exports.getBanner = async (req, res) => {
 
 exports.createBanner = async (req, res) => {
   try {
-    const [count] = await Banner.count();
-
-    if (count[0].total >= 5) return res.status(400).json({ message: "Maksimal 5 banner" });
-    if (!req.file) return res.status(400).json({ message: "Gambar wajib diupload" });
+    if (!req.file) return res.status(400).json({ message: "req.file undefined" });
 
     const { description } = req.body;
     const imageUrl = req.file.path;
@@ -25,13 +22,14 @@ exports.createBanner = async (req, res) => {
       await Banner.create(imageUrl, description, publicId);
       res.status(201).json({ message: "Banner berhasil ditambahkan", imageUrl });
     } catch (dbErr) {
-      await cloudinary.uploader.destroy(req.file.filename);
-      res.status(500).json({ message: dbErr.message });
+      try { await cloudinary.uploader.destroy(publicId); } catch (_) {}
+      return res.status(500).json({ message: dbErr.message });
     }
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
+
 
 exports.deleteBanner = async (req, res) => {
   try {
