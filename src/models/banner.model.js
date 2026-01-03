@@ -12,16 +12,15 @@ exports.count = () => {
     .query("SELECT COUNT(*) AS total FROM banners WHERE type='banner'");
 };
 
-exports.create = (image, description) => {
+exports.create = (image, description, publicId) => {
   return db
     .promise()
     .query(
-      "INSERT INTO banners (image, description, type) VALUES (?, ?, 'banner')",
-      [image, description]
+      "INSERT INTO banners (image, description, public_id, type) VALUES (?, ?, ?, 'banner')",
+      [image, description, publicId]
     );
 };
 
 exports.remove = (id) => {
   return db.promise().query("DELETE FROM banners WHERE id = ?", [id]);
 };
- 

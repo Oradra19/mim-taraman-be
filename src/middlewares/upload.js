@@ -1,28 +1,42 @@
+require("dotenv").config();
+
 const multer = require("multer");
-const path = require("path");
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
 
-const storage = (folder) =>
-  multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, `public/uploads/${folder}`);
-    },
-    filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname);
-      cb(null, `banner_${Date.now()}${ext}`);
-    },
-  });
+// CONFIG CLOUDINARY
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
-const fileFilter = (req, file, cb) => {
-  const allowed = ["image/jpeg", "image/png", "image/jpg", "image/webp"];
-  if (allowed.includes(file.mimetype)) cb(null, true);
-  else cb(new Error("Format file tidak didukung"), false);
-};
+// STORAGE CONFIG
+const storage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: (req, file) => ({
+    folder: "mim", // bisa diganti: mim/banner, mim/berita, dll
+    allowed_formats: ["jpg", "jpeg", "png", "webp"],
+    public_id: `mim-${Date.now()}`,
+    transformation: [
+      { width: 1000, height: 1000, crop: "limit" },
+    ],
+  }),
+});
 
-const upload = (folder) =>
-  multer({
-    storage: storage(folder),
-    fileFilter,
-    limits: { fileSize: 2 * 1024 * 1024 }, // 2MB
-  });
+// MULTER INSTANCE
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB
+  },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype.startsWith("image/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Hanya file gambar yang diperbolehkan"), false);
+    }
+  },
+});
 
 module.exports = upload;

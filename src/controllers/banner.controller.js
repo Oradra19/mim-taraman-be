@@ -1,40 +1,39 @@
 const Banner = require("../models/banner.model");
-const fs = require("fs");
-const path = require("path");
+const cloudinary = require("cloudinary").v2;
 
-// GET BANNER (PUBLIC)
 exports.getBanner = async (req, res) => {
-  const [rows] = await Banner.getAll();
-  res.json(rows);
+  try {
+    const [rows] = await Banner.getAll();
+    res.json(rows);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
 };
 
-// CREATE BANNER (ADMIN)
 exports.createBanner = async (req, res) => {
   try {
     const [count] = await Banner.count();
 
     if (count[0].total >= 5) {
-      return res
-        .status(400)
-        .json({ message: "Maksimal 5 banner" });
+      return res.status(400).json({ message: "Maksimal 5 banner" });
     }
 
     if (!req.file) {
       return res.status(400).json({ message: "Gambar wajib diupload" });
     }
 
-    const imagePath = `uploads/banner/${req.file.filename}`;
     const { description } = req.body;
+    const imageUrl = req.file.path;
+    const publicId = req.file.filename;
 
-    await Banner.create(imagePath, description);
+    await Banner.create(imageUrl, description, publicId);
 
-    res.status(201).json({ message: "Banner berhasil ditambahkan" });
+    res.status(201).json({ message: "Banner berhasil ditambahkan", imageUrl });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-// DELETE BANNER (ADMIN)
 exports.deleteBanner = async (req, res) => {
   try {
     const [rows] = await Banner.getAll();
@@ -44,10 +43,7 @@ exports.deleteBanner = async (req, res) => {
       return res.status(404).json({ message: "Banner tidak ditemukan" });
     }
 
-    // hapus file
-    const filePath = path.join("public", banner.image);
-    if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-
+    await cloudinary.uploader.destroy(`mim/banner/${banner.public_id}`);
     await Banner.remove(req.params.id);
 
     res.json({ message: "Banner berhasil dihapus" });
