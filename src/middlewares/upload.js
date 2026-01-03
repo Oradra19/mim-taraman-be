@@ -11,20 +11,35 @@ cloudinary.config({
 
 const storage = new CloudinaryStorage({
   cloudinary,
-  params: {
-    folder: "mim/banner",
-    allowed_formats: ["jpg", "jpeg", "png", "webp"],
-    public_id: (req, file) => `banner-${Date.now()}`,
-    transformation: [{ width: 1000, height: 1000, crop: "limit" }],
+  params: (req, file) => {
+    // otomatis pilih folder berdasarkan tipe file
+    if (file.mimetype.startsWith("video/")) {
+      return {
+        folder: "video",
+        allowed_formats: ["mp4", "mov", "webm"],
+        public_id: `video-${Date.now()}`,
+      };
+    } else if (file.mimetype.startsWith("image/")) {
+      return {
+        folder: "image",
+        allowed_formats: ["jpg", "jpeg", "png", "webp"],
+        public_id: `image-${Date.now()}`,
+      };
+    } else {
+      throw new Error("Hanya file gambar atau video yang diperbolehkan");
+    }
   },
 });
 
 const upload = multer({
   storage,
-  limits: { fileSize: 5 * 1024 * 1024 },
+  limits: { fileSize: 20 * 1024 * 1024 }, // max 20MB
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith("image/")) cb(null, true);
-    else cb(new Error("Hanya file gambar yang diperbolehkan"), false);
+    if (file.mimetype.startsWith("image/") || file.mimetype.startsWith("video/")) {
+      cb(null, true);
+    } else {
+      cb(new Error("Hanya gambar atau video yang diperbolehkan"), false);
+    }
   },
 });
 

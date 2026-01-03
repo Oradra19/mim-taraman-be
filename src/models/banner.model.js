@@ -3,20 +3,20 @@ const db = require("../config/db");
 exports.getAll = () => {
   return db
     .promise()
-    .query("SELECT * FROM banners WHERE type='banner' ORDER BY created_at DESC");
+    .query("SELECT * FROM banners ORDER BY created_at DESC");
 };
 
 exports.count = () => {
   return db
     .promise()
-    .query("SELECT COUNT(*) AS total FROM banners WHERE type='banner'");
+    .query("SELECT COUNT(*) AS total FROM banners");
 };
 
 exports.create = (image, description, publicId) => {
   return db
     .promise()
     .query(
-      "INSERT INTO banners (image, public_id, description, type) VALUES (?, ?, ?, 'banner')",
+      "INSERT INTO banners (image, public_id, description) VALUES (?, ?, ?)",
       [image, publicId, description]
     );
 };
