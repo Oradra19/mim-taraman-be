@@ -4,10 +4,10 @@ exports.getAll = () => {
   return db.promise().query("SELECT * FROM galeri_foto ORDER BY created_at DESC");
 };
 
-exports.create = (image, description) => {
+exports.create = (image, public_id, description) => {
   return db.promise().query(
-    "INSERT INTO galeri_foto (image, description) VALUES (?, ?)",
-    [image, description]
+    "INSERT INTO galeri_foto (image, public_id, description) VALUES (?, ?, ?)",
+    [image, public_id, description]
   );
 };
 

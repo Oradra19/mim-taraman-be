@@ -1,8 +1,13 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middlewares/upload");
 const auth = require("../middlewares/auth.middleware");
 const controller = require("../controllers/kuesioner.controller");
+const multer = require("multer");
+
+const upload = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
 
 // PUBLIC
 router.get("/", controller.getAll);

@@ -7,10 +7,10 @@ exports.getAll = () => {
 };
 
 exports.create = (data) => {
-  const { judul, link, image } = data;
+  const { judul, link, image, public_id } = data;
   return db.promise().query(
-    "INSERT INTO kuesioner (judul, link, image) VALUES (?, ?, ?)",
-    [judul, link, image]
+    "INSERT INTO kuesioner (judul, link, image, public_id) VALUES (?, ?, ?, ?)",
+    [judul, link, image, public_id]
   );
 };
 

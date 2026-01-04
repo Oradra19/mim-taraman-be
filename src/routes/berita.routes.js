@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middlewares/upload");
 const auth = require("../middlewares/auth.middleware");
+const upload = require("../middlewares/upload");
 const controller = require("../controllers/berita.controller");
 
 // PUBLIC

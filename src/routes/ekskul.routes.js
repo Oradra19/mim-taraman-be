@@ -1,8 +1,11 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middlewares/upload");
 const auth = require("../middlewares/auth.middleware");
 const controller = require("../controllers/ekskul.controller");
+const multer = require("multer");
+
+const storage = multer.memoryStorage(); // pakai memory untuk Cloudinary upload
+const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } });
 
 // PUBLIC
 router.get("/", controller.getAll);

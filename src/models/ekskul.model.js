@@ -1,18 +1,23 @@
 const db = require("../config/db");
 
 exports.getAll = () => {
-  return db.promise().query("SELECT * FROM ekstrakurikuler ORDER BY created_at DESC");
+  return db.promise().query(
+    "SELECT * FROM ekstrakurikuler ORDER BY created_at DESC"
+  );
 };
 
-exports.create = (image, description) => {
+exports.create = (image, public_id, description) => {
   return db
     .promise()
     .query(
-      "INSERT INTO ekstrakurikuler (image, description) VALUES (?, ?)",
-      [image, description]
+      "INSERT INTO ekstrakurikuler (image, public_id, description) VALUES (?, ?, ?)",
+      [image, public_id, description]
     );
 };
 
 exports.remove = (id) => {
-  return db.promise().query("DELETE FROM ekstrakurikuler WHERE id = ?", [id]);
+  return db.promise().query(
+    "DELETE FROM ekstrakurikuler WHERE id = ?",
+    [id]
+  );
 };
