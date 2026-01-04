@@ -1,11 +1,14 @@
 const express = require("express");
 const router = express.Router();
-const upload = require("../middlewares/upload");
 const auth = require("../middlewares/auth.middleware");
+const uploadVideo = require("../middlewares/uploadVideo");
 const controller = require("../controllers/galeriVideo.controller");
 
+// PUBLIC
 router.get("/", controller.getAll);
-router.post("/", auth, upload.single("video"), controller.create);
+
+// ADMIN
+router.post("/", auth, uploadVideo.single("video"), controller.create);
 router.delete("/:id", auth, controller.delete);
 
 module.exports = router;
