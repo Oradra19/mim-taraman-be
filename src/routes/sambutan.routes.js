@@ -5,7 +5,7 @@ const controller = require("../controllers/sambutan.controller");
 
 router.get("/", controller.getSambutan);
 
-router.post("/", auth, controller.createSambutan); 
-router.put("/", auth, controller.editSambutan);    
+router.post("/", auth, controller.createSambutan);
+router.put("/", auth, controller.editSambutan);
 
 module.exports = router;

@@ -11,7 +11,13 @@ exports.getSambutan = async (req, res) => {
 
 exports.createSambutan = async (req, res) => {
   try {
-    const { isi_sambutan, link_sosmed } = req.body;
+    const {
+      isi_sambutan,
+      link_sosmed,
+      link_sosmed2,
+      image,
+      public_id,
+    } = req.body;
 
     const [rows] = await Sambutan.get();
     if (rows.length > 0) {
@@ -20,7 +26,14 @@ exports.createSambutan = async (req, res) => {
         .json({ message: "Sambutan sudah ada, gunakan edit" });
     }
 
-    await Sambutan.create(isi_sambutan, link_sosmed);
+    await Sambutan.create(
+      isi_sambutan,
+      link_sosmed,
+      link_sosmed2,
+      image,
+      public_id
+    );
+
     res.json({ message: "Sambutan berhasil dibuat" });
   } catch (err) {
     res.status(500).json({ message: "Gagal membuat sambutan" });
@@ -29,9 +42,22 @@ exports.createSambutan = async (req, res) => {
 
 exports.editSambutan = async (req, res) => {
   try {
-    const { isi_sambutan, link_sosmed } = req.body;
+    const {
+      isi_sambutan,
+      link_sosmed,
+      link_sosmed2,
+      image,
+      public_id,
+    } = req.body;
 
-    await Sambutan.update(isi_sambutan, link_sosmed);
+    await Sambutan.update(
+      isi_sambutan,
+      link_sosmed,
+      link_sosmed2,
+      image,
+      public_id
+    );
+
     res.json({ message: "Sambutan berhasil diperbarui" });
   } catch (err) {
     res.status(500).json({ message: "Gagal mengedit sambutan" });
