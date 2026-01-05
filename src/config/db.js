@@ -7,7 +7,7 @@ const db = mysql.createPool({
   password: process.env.MYSQL_ADDON_PASSWORD,
   database: process.env.MYSQL_ADDON_DB,
   port: process.env.MYSQL_ADDON_PORT,
-  connectionLimit: 5,
+  connectionLimit: 3,
 });
 
 console.log("DB HOST:", process.env.MYSQL_ADDON_HOST);
