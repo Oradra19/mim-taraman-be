@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const auth = require("../middlewares/auth.middleware");
-const controller = require("../controllers/chatbotPrompt.controller");
+const controller = require("../controllers/ChatbotPrompt.controller");
 
 // PUBLIC (dipakai chatbot)
 router.get("/public", controller.getPublic);
