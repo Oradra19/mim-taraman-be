@@ -2,97 +2,67 @@ const db = require("../config/db");
 
 const VisitorStats = {
   incrementDaily() {
-    return new Promise((resolve, reject) => {
-      const today = new Date().toISOString().split("T")[0];
+    const today = new Date().toISOString().split("T")[0];
 
-      db.query(
-        `INSERT INTO visitors_daily (date, count)
-         VALUES (?, 1)
-         ON DUPLICATE KEY UPDATE count = count + 1`,
-        [today],
-        (err) => {
-          if (err) reject(err);
-          else resolve();
-        }
-      );
-    });
+    return db.promise().query(
+      `INSERT INTO visitors_daily (date, count)
+       VALUES (?, 1)
+       ON DUPLICATE KEY UPDATE count = count + 1`,
+      [today]
+    );
   },
 
   incrementWeekly() {
-    return new Promise((resolve, reject) => {
-      const date = new Date();
-      const year = date.getFullYear();
-      const week = getWeekNumber(date);
+    const date = new Date();
+    const year = date.getFullYear();
+    const week = getWeekNumber(date);
 
-      db.query(
-        `INSERT INTO visitors_weekly (year, week, count)
-         VALUES (?, ?, 1)
-         ON DUPLICATE KEY UPDATE count = count + 1`,
-        [year, week],
-        (err) => {
-          if (err) reject(err);
-          else resolve();
-        }
-      );
-    });
+    return db.promise().query(
+      `INSERT INTO visitors_weekly (year, week, count)
+       VALUES (?, ?, 1)
+       ON DUPLICATE KEY UPDATE count = count + 1`,
+      [year, week]
+    );
   },
 
   incrementMonthly() {
-    return new Promise((resolve, reject) => {
-      const date = new Date();
-      const year = date.getFullYear();
-      const month = date.getMonth() + 1;
+    const date = new Date();
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
 
-      db.query(
-        `INSERT INTO visitors_monthly (year, month, count)
-         VALUES (?, ?, 1)
-         ON DUPLICATE KEY UPDATE count = count + 1`,
-        [year, month],
-        (err) => {
-          if (err) reject(err);
-          else resolve();
-        }
-      );
-    });
+    return db.promise().query(
+      `INSERT INTO visitors_monthly (year, month, count)
+       VALUES (?, ?, 1)
+       ON DUPLICATE KEY UPDATE count = count + 1`,
+      [year, month]
+    );
   },
 
   getDaily(limit = 30) {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * FROM visitors_daily ORDER BY date DESC LIMIT ?`,
-        [limit],
-        (err, rows) => {
-          if (err) reject(err);
-          else resolve(rows);
-        }
-      );
-    });
+    return db.promise().query(
+      `SELECT * FROM visitors_daily 
+       ORDER BY date DESC 
+       LIMIT ?`,
+      [limit]
+    );
   },
 
   getWeekly(limit = 12) {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * FROM visitors_weekly ORDER BY year DESC, week DESC LIMIT ?`,
-        [limit],
-        (err, rows) => {
-          if (err) reject(err);
-          else resolve(rows);
-        }
-      );
-    });
+    return db.promise().query(
+      `SELECT * FROM visitors_weekly 
+       ORDER BY year DESC, week DESC 
+       LIMIT ?`,
+      [limit]
+    );
   },
 
   getMonthly(limit = 12) {
-    return new Promise((resolve, reject) => {
-      db.query(
-        `SELECT * FROM visitors_monthly ORDER BY year DESC, month DESC LIMIT ?`,
-        [limit],
-        (err, rows) => {
-          if (err) reject(err);
-          else resolve(rows);
-        }
-      );
-    });
+    return db.promise().query(
+      `SELECT * FROM visitors_monthly 
+       ORDER BY year DESC, month DESC 
+       LIMIT ?`,
+      [limit]
+    );
   },
 };
 

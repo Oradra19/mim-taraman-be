@@ -3,10 +3,10 @@ const ChatbotPrompt = require("../models/ChatbotPrompt.model");
 // GET ALL (ADMIN)
 exports.getAll = async (req, res) => {
   try {
-    const data = await ChatbotPrompt.getAll();
-    res.json({ success: true, data });
+    const [rows] = await ChatbotPrompt.getAll();
+    res.json(rows);
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -15,9 +15,9 @@ exports.create = async (req, res) => {
   try {
     const { role, title, content } = req.body;
     await ChatbotPrompt.create({ role, title, content });
-    res.json({ success: true, message: "Prompt ditambahkan" });
+    res.status(201).json({ message: "Prompt ditambahkan" });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
@@ -27,30 +27,28 @@ exports.update = async (req, res) => {
     const { id } = req.params;
     const { role, title, content } = req.body;
     await ChatbotPrompt.update(id, { role, title, content });
-    res.json({ success: true, message: "Prompt diperbarui" });
+    res.json({ message: "Prompt diperbarui" });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
 // DELETE (SOFT)
 exports.deactivate = async (req, res) => {
   try {
-    const { id } = req.params;
-    await ChatbotPrompt.deactivate(id);
-    res.json({ success: true, message: "Prompt dinonaktifkan" });
+    await ChatbotPrompt.deactivate(req.params.id);
+    res.json({ message: "Prompt dinonaktifkan" });
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
 
-
-// GET ACTIVE PROMPT (PUBLIC - untuk chatbot)
+// GET ACTIVE PROMPT (PUBLIC)
 exports.getPublic = async (req, res) => {
   try {
-    const data = await ChatbotPrompt.getPublic();
-    res.json({ success: true, data });
+    const [rows] = await ChatbotPrompt.getPublic();
+    res.json(rows);
   } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
+    res.status(500).json({ message: err.message });
   }
 };
