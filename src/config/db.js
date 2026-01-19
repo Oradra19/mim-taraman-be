@@ -10,6 +10,14 @@ const db = mysql.createPool({
   connectionLimit: 3,
 });
 
-console.log("DB HOST:", process.env.MYSQL_ADDON_HOST);
+// TEST KONEKSI SAAT START
+db.getConnection((err, connection) => {
+  if (err) {
+    console.error("❌ DB Connection Error:", err.message);
+  } else {
+    console.log("✅ DB Connected");
+    connection.release();
+  }
+});
+
 module.exports = db;
-orts = db;

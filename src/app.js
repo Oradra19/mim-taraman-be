@@ -27,6 +27,9 @@ app.use("/galeri-video", require("./routes/galeriVideo.routes"));
 app.use("/kuesioner", require("./routes/kuesioner.routes"));
 app.use("/saran", require("./routes/saran.routes"));
 app.use("/media-sosial", require("./routes/mediaSosial.routes"));
+app.use("/visitors", require("./routes/visitorStats.routes"));
+app.use("/chatbot-prompts", require("./routes/chatbotPrompt.route"));
+
 
 
 
