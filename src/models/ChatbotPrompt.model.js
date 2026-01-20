@@ -30,9 +30,10 @@ const ChatbotPrompt = {
     );
   },
 
-  deactivate(id) {
+  // HARD DELETE
+  delete(id) {
     return db.promise().query(
-      "UPDATE chatbot_prompts SET is_active = 0 WHERE id = ?",
+      "DELETE FROM chatbot_prompts WHERE id = ?",
       [id]
     );
   },

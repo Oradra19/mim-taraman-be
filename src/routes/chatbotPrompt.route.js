@@ -11,6 +11,6 @@ router.get("/public", controller.getPublic);
 router.get("/", auth, controller.getAll);
 router.post("/", auth, controller.create);
 router.put("/:id", auth, controller.update);
-router.delete("/:id", auth, controller.deactivate);
+router.delete("/:id", auth, controller.delete);
 
 module.exports = router;

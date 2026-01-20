@@ -33,11 +33,11 @@ exports.update = async (req, res) => {
   }
 };
 
-// DELETE (SOFT)
-exports.deactivate = async (req, res) => {
+// HARD DELETE
+exports.delete = async (req, res) => {
   try {
-    await ChatbotPrompt.deactivate(req.params.id);
-    res.json({ message: "Prompt dinonaktifkan" });
+    await ChatbotPrompt.delete(req.params.id);
+    res.json({ message: "Prompt dihapus permanen" });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
